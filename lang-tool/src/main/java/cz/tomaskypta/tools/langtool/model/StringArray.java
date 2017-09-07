@@ -15,7 +15,7 @@ public class StringArray extends ResourceEntry {
 
 	public Term getPosition(int position) {
 		
-		if (position>terms.length){
+		if (position>=terms.length){
 			terms = Arrays.copyOf(terms, position*2);
 		}
 		

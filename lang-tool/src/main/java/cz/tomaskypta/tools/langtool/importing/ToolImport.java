@@ -26,6 +26,7 @@ public class ToolImport {
 	public static void run(CommandlineArguments args)
 			throws FileNotFoundException, IOException,
 			ParserConfigurationException, SAXException, TransformerException {
+		
 		if (StringUtils.isEmpty(args.getImportFile())) {
 			System.err.println("Cannot import, missing input file name");
 			return;
@@ -34,6 +35,7 @@ public class ToolImport {
 		File projectFile = new File(args.getExportProject());
 		if (!projectFile.exists()) {
 			System.err.println("Cannot import, project directory not set.");
+			return;
 		}
 
 		ModelLoader loader = new ModelLoader();
@@ -42,9 +44,14 @@ public class ToolImport {
 		loader.load(projectFile,
 				parseAdditionalResources(args.getAdditionalResources()));
 
-		System.out.println("Loading model from input excel file.");
-		HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(new File(
-				args.getImportFile())));
+		File inputFile = new File(args.getImportFile());
+		if (!inputFile.exists()) {
+			System.err.println("Cannot import, input file does not exist: " + inputFile.getAbsolutePath());
+			return;
+		}
+		
+		System.out.println("Loading model from input excel file: " + inputFile.getAbsolutePath());
+		HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(inputFile));
 		HSSFSheet sheet = wb.getSheetAt(0);
 		loader.load(sheet);
 
